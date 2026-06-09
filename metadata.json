@@ -1,0 +1,6 @@
+{
+  "name": "Nandhini MakeUp Artist",
+  "description": "Luxury bridal and fashion makeup artist portfolio, services, and booking application.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
