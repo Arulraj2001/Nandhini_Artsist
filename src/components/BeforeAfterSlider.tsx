@@ -86,7 +86,7 @@ export const BeforeAfterSlider: React.FC = () => {
           style={{ width: `${sliderPosition}%` }}
         >
           <img
-            src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=1200&auto=format&fit=crop"
+            src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg"
             alt="Natural Before Look"
             className="absolute top-0 left-0 w-full h-full object-cover max-w-none"
             style={{ width: containerRef.current?.getBoundingClientRect().width }}
