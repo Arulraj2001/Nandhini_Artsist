@@ -24,7 +24,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ testimonials }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Page Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 reveal">
           <div className="inline-flex items-center gap-1.5 text-xs text-[#81314c] bg-[#eddee3] px-3.5 py-1.5 rounded-full uppercase tracking-widest font-semibold font-sans mb-3">
             <MessageSquare className="w-3.5 h-3.5" /> THE CHERISHED BRIDES
           </div>
@@ -38,9 +38,9 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ testimonials }) => {
 
         {/* Large featured luxury carousel spotlight */}
         {activeSpotlight && (
-          <div 
+          <div
             id="testimonial-hero-carousel"
-            className="bg-[#1F2937] text-white rounded-3xl p-8 md:p-16 mb-20 relative overflow-hidden shadow-2xl border border-gray-800"
+            className="bg-[#1F2937] text-white rounded-3xl p-8 md:p-16 mb-20 relative overflow-hidden shadow-2xl border border-gray-800 reveal"
           >
             {/* Background absolute quote symbol */}
             <div className="absolute right-8 bottom-8 text-white/5 pointer-events-none select-none">
@@ -104,12 +104,12 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ testimonials }) => {
         )}
 
         {/* Regular masonry grid for other reviews */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
           {testimonials.map((review, idx) => (
             <div
               id={`testimonial-card-grid-${idx}`}
               key={review.id}
-              className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between space-y-6 hover:shadow-md transition-shadow"
+              className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between space-y-6 luxury-card-hover"
             >
               <div className="space-y-4">
                 <div className="flex justify-between items-center">

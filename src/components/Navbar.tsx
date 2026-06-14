@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Menu, X, Sparkles, User, LogOut } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Menu, X, Sparkles, User, LogOut, Sun, Moon } from "lucide-react";
 import { WebsiteSettings } from "../types";
 
 interface NavbarProps {
@@ -8,6 +8,8 @@ interface NavbarProps {
   settings: WebsiteSettings;
   isAdmin: boolean;
   onLogout: () => void;
+  isDark?: boolean;
+  onToggleDark?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -15,9 +17,26 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNavigate,
   settings,
   isAdmin,
-  onLogout
+  onLogout,
+  isDark = false,
+  onToggleDark,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        const progress = (window.scrollY / totalHeight) * 100;
+        setScrollProgress(progress);
+      }
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navItems = [
     { name: "Home", id: "home" },
@@ -35,20 +54,26 @@ export const Navbar: React.FC<NavbarProps> = ({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const isHomeAtTop = currentPage === "home" && !isScrolled;
+
   return (
-    <nav 
-      className="sticky top-0 z-40 bg-[#fbfaf9]/85 backdrop-blur-md border-b border-[#eddee3] tracking-wide transition-colors duration-300"
+    <nav
+      className={`sticky top-0 z-40 tracking-wide transition-all duration-500 ${
+        isHomeAtTop
+          ? "navbar-at-top"
+          : "navbar-scrolled"
+      }`}
       id="main-navigation"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
           {/* Logo Brand Title with Luxury Spacing */}
-          <div 
-            onClick={() => handleNavClick("home")} 
+          <div
+            onClick={() => handleNavClick("home")}
             className="flex flex-col items-start cursor-pointer hover:opacity-85 transition-opacity"
             id="brand-logo"
           >
-            <span style={{ fontFamily: "'Cinzel', serif" }} className="text-xl sm:text-2xl font-bold tracking-[0.22em] text-[#1F2937] leading-tight flex items-center">
+            <span style={{ fontFamily: "'Cinzel Decorative', 'Cinzel', serif" }} className="text-xl sm:text-2xl font-bold tracking-[0.16em] leading-tight flex items-center bg-gradient-to-r from-[#81314c] via-[#b84f70] to-[#81314c] bg-clip-text text-transparent">
               {settings.logoText || "NANDHINI"}
             </span>
             <span className="text-[8px] uppercase tracking-[0.38em] text-[#81314c] font-semibold mt-1">
@@ -56,22 +81,27 @@ export const Navbar: React.FC<NavbarProps> = ({
             </span>
           </div>
 
+
           {/* Desktop Navigation Links */}
           <div className="hidden lg:flex items-center space-x-8">
             {navItems.map((item) => {
               const active = currentPage === item.id;
               return (
                 <button
-                   id={`nav-item-${item.id}`}
-                   key={item.id}
-                   onClick={() => handleNavClick(item.id)}
-                   className={`relative font-sans text-xs font-semibold uppercase tracking-widest transition-all duration-300 py-2 hover:text-[#81314c] ${
-                     active ? "text-[#81314c]" : "text-gray-500"
-                   }`}
+                  id={`nav-item-${item.id}`}
+                  key={item.id}
+                  onClick={() => handleNavClick(item.id)}
+                  className={`relative font-sans text-xs font-semibold uppercase tracking-widest transition-all duration-300 py-2 hover:text-[#81314c] ${
+                    active
+                      ? "text-[#81314c]"
+                      : isHomeAtTop
+                      ? "text-gray-700"
+                      : "text-gray-500"
+                  }`}
                 >
                   {item.name}
                   {active && (
-                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#81314c] rounded-full" />
+                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#81314c] to-[#e6c699] rounded-full" />
                   )}
                 </button>
               );
@@ -80,6 +110,21 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Desktop Right Side Booking CTA */}
           <div className="hidden lg:flex items-center space-x-4">
+            {/* Dark / Light Toggle */}
+            <button
+              onClick={onToggleDark}
+              title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-300 ${
+                isDark
+                  ? "bg-[#2a1f25] border-[#3d2d36] text-[#e6c699] hover:bg-[#3d2d36]"
+                  : isHomeAtTop
+                  ? "bg-white/20 border-white/30 text-white hover:bg-white/30"
+                  : "bg-white/70 border-[#eddee3] text-[#81314c] hover:bg-[#eddee3]"
+              }`}
+            >
+              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+
             {isAdmin ? (
               <div className="flex items-center space-x-3 bg-[#eddee3] px-4 py-2 rounded-full border border-[#81314c]/20">
                 <button
@@ -122,10 +167,22 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <User className="w-4 h-4" />
               </button>
             )}
+            {/* Mobile dark toggle */}
+            <button
+              onClick={onToggleDark}
+              title={isDark ? "Light Mode" : "Dark Mode"}
+              className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${
+                isDark
+                  ? "bg-[#2a1f25] border-[#3d2d36] text-[#e6c699]"
+                  : "bg-white/70 border-[#eddee3] text-[#81314c]"
+              }`}
+            >
+              {isDark ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+            </button>
             <button
               id="mobile-hamburger"
               onClick={() => setIsOpen(!isOpen)}
-              className="text-[#1F2937] p-2 rounded-md hover:bg-gray-100 transition-colors"
+              className={`p-2 rounded-md transition-colors ${isDark ? "text-[#f0e8ec] hover:bg-[#2a1f25]" : "text-[#1F2937] hover:bg-gray-100"}`}
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -135,8 +192,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Drawer Overlay */}
       {isOpen && (
-        <div 
-          className="lg:hidden bg-[#fbfaf9] border-b border-[#eddee3] py-5 px-6 space-y-4 shadow-xl transition-all duration-300 absolute w-full top-20 left-0 z-35"
+        <div
+          className={`lg:hidden border-b py-5 px-6 space-y-4 shadow-xl transition-all duration-300 absolute w-full top-20 left-0 z-35 ${
+            isDark ? "bg-[#1a1218] border-[#2a2028]" : "bg-[#fbfaf9] border-[#eddee3]"
+          }`}
           id="mobile-drawer"
         >
           <div className="flex flex-col space-y-4">
@@ -148,14 +207,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
                   className={`text-left font-sans text-xs font-semibold uppercase tracking-widest w-full py-1.5 transition-all ${
-                    active ? "text-[#81314c] pl-2 border-l-2 border-[#81314c]" : "text-gray-505 pl-0"
+                    active
+                      ? "text-[#81314c] pl-2 border-l-2 border-[#81314c]"
+                      : isDark ? "text-[#cbbac3] pl-0" : "text-gray-500 pl-0"
                   }`}
                 >
                   {item.name}
                 </button>
               );
             })}
-            
+
             <hr className="border-[#eddee3] my-2" />
 
             {isAdmin ? (
@@ -186,6 +247,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
       )}
+      {/* Scroll Progress Indicator */}
+      <div
+        className="absolute bottom-0 left-0 h-[2.5px] bg-gradient-to-r from-[#81314c] via-[#b84f70] to-[#e6c699] transition-all duration-100 ease-out"
+        style={{ width: `${scrollProgress}%` }}
+      />
     </nav>
   );
 };

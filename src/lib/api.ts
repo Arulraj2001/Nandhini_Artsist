@@ -826,10 +826,14 @@ export const api = {
       if (!error && data) {
         return mapInstagramSettings.toReact(data);
       }
-      // If table exists but row doesn't, seed it
-      const seeded = mapInstagramSettings.toDb(DEFAULT_INSTAGRAM_SETTINGS);
-      await supabase.from("instagram_settings").insert(seeded);
-      return DEFAULT_INSTAGRAM_SETTINGS;
+      // If table exists but row doesn't and no error, seed it
+      if (!error && !data) {
+        const seeded = mapInstagramSettings.toDb(DEFAULT_INSTAGRAM_SETTINGS);
+        await supabase.from("instagram_settings").insert(seeded).maybeSingle();
+        return DEFAULT_INSTAGRAM_SETTINGS;
+      }
+      // Table may not exist — fall back to localStorage
+      console.warn("Instagram settings table unavailable, using local fallback:", error?.message);
     }
     return getLocalCollection<InstagramSettings>("instagram_settings", DEFAULT_INSTAGRAM_SETTINGS);
   },
@@ -860,11 +864,10 @@ export const api = {
         .from("instagram_posts")
         .select("*")
         .order("timestamp", { ascending: false });
-      if (error) {
-        console.warn("Instagram posts read error, using local fallback:", error);
-      } else {
+      if (!error && data) {
         return (data || []).map(mapInstagramPost.toReact);
       }
+      // Silently fall back to localStorage — table may not exist
     }
     // Sort posts from local collection
     const list = getLocalCollection<InstagramPost[]>("instagram_posts", DEFAULT_INSTAGRAM_POSTS);
@@ -878,11 +881,10 @@ export const api = {
         .select("*")
         .order("created_at", { ascending: false })
         .limit(20);
-      if (error) {
-        console.warn("Instagram logs read error, using local fallback:", error);
-      } else {
+      if (!error && data) {
         return (data || []).map(mapInstagramSyncLog.toReact);
       }
+      // Silently fall back to localStorage — table may not exist
     }
     const list = getLocalCollection<InstagramSyncLog[]>("instagram_sync_logs", DEFAULT_INSTAGRAM_LOGS);
     return list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());

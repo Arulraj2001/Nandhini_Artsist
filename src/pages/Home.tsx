@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
-import { 
-  Sparkles, 
-  ArrowRight, 
-  ArrowDown, 
-  Award, 
-  Star, 
-  Clock, 
-  Check, 
-  Instagram, 
+import {
+  Sparkles,
+  ArrowRight,
+  ArrowDown,
+  Award,
+  Star,
+  Clock,
+  Check,
+  Instagram,
   ShieldCheck,
   Play,
   Layers,
@@ -36,10 +36,10 @@ export const Home: React.FC<HomeProps> = ({
   onNavigate,
   instagramPosts = [],
 }) => {
-  const activeServices = services.filter((s) => s.active).slice(0, 3);
+  const activeServices = services.filter((s) => s.active).slice(0, 4);
   const aboutData = parseAboutStory(settings?.aboutStory);
-  const previewPortfolio = portfolio.slice(0, 3);
-  const previewReviews = testimonials.slice(0, 3);
+  const previewPortfolio = portfolio.slice(0, 4);
+  const previewReviews = testimonials.slice(0, 4);
 
   // Counter animation hook representation
   const [bridesCount, setBridesCount] = useState(100);
@@ -47,7 +47,7 @@ export const Home: React.FC<HomeProps> = ({
 
   // Instagram dynamic lookbook state variables
   const [activeTab, setActiveTab] = useState<string>("All");
-  const [visibleLimit, setVisibleLimit] = useState<number>(6);
+  const [visibleLimit, setVisibleLimit] = useState<number>(8);
   const [previewMedia, setPreviewMedia] = useState<InstagramPost | null>(null);
 
   // Derived filtered posts list
@@ -96,191 +96,219 @@ export const Home: React.FC<HomeProps> = ({
 
   return (
     <div className="bg-[#fbfaf9]" id="home-page">
-      {/* 1. LUXURY FULL-SCREEN HERO SECTION */}
-      <section 
+      {/* 1. LUXURY SPLIT-COLUMN HERO SECTION */}
+      <section
         id="hero-section"
-        className="relative min-h-[90vh] flex items-center justify-center text-center px-4 overflow-hidden py-16"
+        className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden py-20 luxury-mesh-bg dot-grid-bg"
       >
-        {/* Ambient background with high-quality default or custom hero banner */}
-        <div className="absolute inset-0 z-0 select-none">
-          <div className="absolute inset-0 bg-[#fbfaf9]/65 z-10 transition-colors duration-300" />
-          <div className="absolute inset-0 bg-radial from-[#81314c]/5 to-transparent z-10 pointer-events-none" />
-          <img
-            src={settings.heroBanner || "https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1200&auto=format&fit=crop"}
-            alt="Signature Bride Makeup Banner"
-            className="w-full h-full object-cover filter brightness-95"
-            onError={(e) => {
-              // Fallback just in case user provides broken custom links in settings
-              (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1200&auto=format&fit=crop";
-            }}
-          />
-        </div>
+        <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-20">
 
-        {/* Content Area with refined typography */}
-        <div className="relative z-20 max-w-4xl mx-auto space-y-6 mt-6 md:mt-12">
-          {/* Badge */}
-          <div 
-            id="hero-award-badge"
-            className="inline-flex items-center gap-2 bg-[#eddee3] text-[#81314c] border border-[#81314c]/15 px-4.5 py-1.5 rounded-full shadow-sm animate-fade-in font-sans text-[10px] md:text-xs uppercase font-semibold tracking-[0.2em]"
-          >
-            <Award className="w-4 h-4 text-[#e6c699]" />
-            {settings.heroBadge || "Award Winning Bridal Makeup Artist"}
+          {/* Left Column: Editorial Content */}
+          <div className="lg:col-span-6 text-left space-y-6 md:space-y-7 reveal-left">
+            {/* Elegant Tag Badge */}
+            <div
+              id="hero-award-badge"
+              className="inline-flex items-center gap-2 bg-[#eddee3] text-[#81314c] border border-[#81314c]/15 px-4.5 py-1.5 rounded-full shadow-sm font-sans text-[10px] md:text-xs uppercase font-semibold tracking-[0.2em] animate-fade-in"
+            >
+              <Award className="w-4 h-4 text-[#e6c699]" />
+              {settings.heroBadge || "Award Winning Bridal Makeup Artist"}
+            </div>
+
+            {/* High-Fashion Title */}
+            <h1
+              id="hero-main-heading"
+              style={{ fontFamily: "'Italiana', serif" }}
+              className="text-4.5xl sm:text-6xl md:text-7.5xl text-[#1F2937] leading-[1.08] tracking-tight font-extrabold animate-fade-in"
+            >
+              {settings.heroTitle || "Transforming Beauty Into Timeless Elegance"}
+            </h1>
+
+            {/* Description */}
+            <p
+              id="hero-subtext"
+              className="max-w-xl text-sm sm:text-base md:text-md text-gray-700 font-sans font-light leading-relaxed animate-fade-in"
+            >
+              {settings.heroDescription || "Professional Bridal & Fashion Makeup Artist creating stunning individual masterpieces for your most crucial elegant life events."}
+            </p>
+
+            {/* Call-to-actions */}
+            <div
+              id="hero-ctas"
+              className="flex flex-col sm:flex-row items-center gap-4 pt-4 animate-fade-in"
+            >
+              <button
+                id="hero-btn-book"
+                onClick={() => onNavigate("contact")}
+                className="w-full sm:w-auto bg-[#81314c] hover:bg-[#69233b] text-white font-sans text-xs font-semibold uppercase tracking-widest px-10 py-4.5 rounded-full shadow-lg hover:shadow-[#81314c]/20 transition-all duration-300 transform hover:-translate-y-0.5 active:scale-95 cursor-pointer luxury-button-hover"
+              >
+                Book Consultation
+              </button>
+              <button
+                id="hero-btn-portfolio"
+                onClick={() => onNavigate("portfolio")}
+                className="w-full sm:w-auto bg-white hover:bg-gray-50 text-[#1F2937] border border-[#eddee3] font-sans text-xs font-semibold uppercase tracking-widest px-10 py-4.5 rounded-full hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 active:scale-95 cursor-pointer"
+              >
+                View Portfolio
+              </button>
+            </div>
           </div>
 
-          {/* Heading with Elegant Font */}
-          <h1 
-            id="hero-main-heading"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-            className="text-4.5xl sm:text-6xl md:text-7.5xl text-[#1F2937] leading-[1.08] tracking-tight font-extrabold"
-          >
-            {settings.heroTitle || "Transforming Beauty Into Timeless Elegance"}
-          </h1>
+          {/* Right Column: Editorial Collage */}
+          <div className="lg:col-span-6 relative w-full flex justify-center py-14 px-4 sm:px-0 lg:py-0 reveal-right">
+            {/* Radial backing glow */}
+            <div className="absolute inset-0 bg-[#81314c]/5 rounded-full filter blur-3xl pointer-events-none scale-75" />
 
-          {/* Description */}
-          <p 
-            id="hero-subtext"
-            className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-gray-700 font-sans font-light leading-relaxed"
-          >
-            {settings.heroDescription || "Professional Bridal & Fashion Makeup Artist creating stunning individual masterpieces for your most crucial elegant life events."}
-          </p>
+            <div className="relative w-full max-w-[420px] aspect-[4/5]">
+              {/* Image 3: Background cosmetic detail offset right */}
+              <img
+                src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=400&auto=format&fit=crop"
+                alt="Luxury Cosmetics palette"
+                className="absolute top-[-15px] right-[-10px] sm:top-[-30px] sm:right-[-20px] w-24 h-24 sm:w-36 sm:h-36 rounded-3xl border-2 border-white shadow-xl object-cover rotate-6 transition-all hover:rotate-0 duration-500 z-10 select-none block"
+              />
 
-          {/* Call-to-actions */}
-          <div 
-            id="hero-ctas"
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
-          >
-            <button
-              id="hero-btn-book"
-              onClick={() => onNavigate("contact")}
-              className="w-full sm:w-auto bg-[#81314c] hover:bg-[#69233b] text-white font-sans text-xs font-semibold uppercase tracking-widest px-10 py-4.5 rounded-full shadow-lg hover:shadow-[#81314c]/20 transition-all duration-300 transform hover:-translate-y-0.5 active:scale-95 cursor-pointer"
-            >
-              Book Consultation
-            </button>
-            <button
-              id="hero-btn-portfolio"
-              onClick={() => onNavigate("portfolio")}
-              className="w-full sm:w-auto bg-[#fbfaf9]/90 hover:bg-[#fbfaf9] text-[#1F2937] border border-gray-300 font-sans text-xs font-semibold uppercase tracking-widest px-10 py-4.5 rounded-full hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 active:scale-95 cursor-pointer"
-            >
-              View Portfolio
-            </button>
+              {/* Image 2: Process detail offset left */}
+              <img
+                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=400&auto=format&fit=crop"
+                alt="Beauty Brush application detail"
+                className="absolute bottom-[-15px] left-[-15px] sm:bottom-[-30px] sm:left-[-40px] w-28 h-28 sm:w-48 sm:h-48 rounded-3xl border-2 border-white shadow-xl object-cover -rotate-6 transition-all hover:rotate-0 duration-500 z-20 select-none block"
+              />
+
+              {/* Image 1: Main Portrait Showcase */}
+              <div className="relative z-10 w-full h-full rounded-3xl overflow-hidden shadow-2xl border border-[#e6c699]/20 transition-all hover:scale-[1.01] duration-500">
+                <img
+                  src={settings.heroBanner || "https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1200&auto=format&fit=crop"}
+                  alt="Signature Glamour portrait"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1200&auto=format&fit=crop";
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#81314c]/20 via-transparent to-transparent pointer-events-none" />
+              </div>
+            </div>
           </div>
 
-          <div className="flex justify-center pt-8">
-            <button 
-              onClick={() => {
-                document.getElementById("stats-section")?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="p-3 bg-white/60 text-[#81314c] border border-[#eddee3] rounded-full shadow-md hover:shadow-lg transition-all animate-bounce cursor-pointer"
-            >
-              <ArrowDown className="w-4 h-4" />
-            </button>
-          </div>
         </div>
       </section>
 
-      {/* 2. STATS SECTION */}
-      <section 
-        id="stats-section"
-        className="relative py-12 bg-white border-y border-[#eddee3] overflow-hidden transition-colors duration-300"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            
-            <div className="space-y-1">
-              <span className="block text-3xl md:text-5xl font-serif font-semibold text-[#81314c]">
-                {bridesCount}+
-              </span>
-              <span className="block text-xs uppercase tracking-widest text-gray-500 font-sans font-semibold">
-                Happy Brides
-              </span>
-            </div>
+      {/* 1.5. SCROLLING MARQUEE STRIP */}
+      <div className="relative z-20 bg-[#81314c] py-3.5 overflow-hidden marquee-track border-y border-[#69233b]">
+        <div className="animate-marquee inline-flex items-center gap-0">
+          {[...Array(2)].map((_, i) => (
+            <span key={i} className="inline-flex items-center gap-6 pr-6">
+              {["Bridal Makeup", "HD Airbrush", "Saree Draping", "Luxury Cosmetics", "Fashion Editorial", "Reception Glam", "Engagement Looks", "Waterproof Formulas", "Premium Lash Extensions", "Hair Couture"].map((tag) => (
+                <span key={tag} className="inline-flex items-center gap-3 text-white/90 text-[10px] uppercase tracking-[0.22em] font-sans font-semibold whitespace-nowrap">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#e6c699] shrink-0" />
+                  {tag}
+                </span>
+              ))}
+            </span>
+          ))}
+        </div>
+      </div>
 
-            <div className="space-y-1">
-              <span className="block text-3xl md:text-5xl font-serif font-semibold text-[#e6c699]">
-                {settings.aboutExperienceYears || "10+"}
-              </span>
-              <span className="block text-xs uppercase tracking-widest text-gray-500 font-sans font-semibold">
-                Years Experience
-              </span>
-            </div>
+      {/* 2. OVERLAPPING GLASS STATS RIBBON */}
+      <section id="stats-section" className="relative z-30 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 lg:mt-6 select-none reveal">
+        <div className="glass-ribbon rounded-3xl py-10 px-6 sm:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center border border-[#eddee3]/30">
 
-            <div className="space-y-1">
-              <span className="block text-3xl md:text-5xl font-serif font-semibold text-[#81314c]">
-                {eventsCount}+
-              </span>
-              <span className="block text-xs uppercase tracking-widest text-gray-500 font-sans font-semibold">
-                Events Covered
-              </span>
-            </div>
-
-            <div className="space-y-1">
-              <span className="block text-3xl md:text-5xl font-serif font-semibold text-[#e6c699] flex items-center justify-center gap-1">
-                4.9 <Star className="w-5 h-5 fill-current text-[#e6c699]" />
-              </span>
-              <span className="block text-xs uppercase tracking-widest text-gray-500 font-sans font-semibold">
-                Customer Rating
-              </span>
-            </div>
-
+          <div className="space-y-1">
+            <span className="block text-3.5xl md:text-5xl font-serif font-bold text-[#81314c]">
+              {bridesCount}+
+            </span>
+            <span className="block text-[10px] uppercase tracking-widest text-gray-500 font-sans font-semibold">
+              Happy Brides
+            </span>
           </div>
+
+          <div className="space-y-1 border-l border-gray-150/80">
+            <span className="block text-3.5xl md:text-5xl font-serif font-bold text-[#81314c]">
+              {settings.aboutExperienceYears || "10+"}
+            </span>
+            <span className="block text-[10px] uppercase tracking-widest text-gray-500 font-sans font-semibold">
+              Years Experience
+            </span>
+          </div>
+
+          <div className="space-y-1 border-l border-gray-150/80">
+            <span className="block text-3.5xl md:text-5xl font-serif font-bold text-[#81314c]">
+              {eventsCount}+
+            </span>
+            <span className="block text-[10px] uppercase tracking-widest text-gray-500 font-sans font-semibold">
+              Events Covered
+            </span>
+          </div>
+
+          <div className="space-y-1 border-l border-gray-150/80">
+            <span className="block text-3.5xl md:text-5xl font-serif font-bold text-[#81314c] flex items-center justify-center gap-1">
+              4.9 <Star className="w-5 h-5 fill-current text-[#e6c699]" />
+            </span>
+            <span className="block text-[10px] uppercase tracking-widest text-gray-500 font-sans font-semibold">
+              Customer Rating
+            </span>
+          </div>
+
         </div>
       </section>
 
-      {/* 3. ABOUT PREVIEW SECTION */}
-      <section 
+      {/* 3. ABOUT PREVIEW SECTION (RICH VELVET DARK PANEL) */}
+      <section
         id="about-preview-section"
-        className="py-20 md:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        className="py-24 bg-[#191215] text-white border-y border-[#81314c]/20 relative overflow-hidden mt-16 reveal"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
+        {/* Background glow meshes */}
+        <div className="absolute top-[-100px] left-[-100px] w-96 h-96 bg-[#81314c]/10 rounded-full filter blur-3xl pointer-events-none" />
+        <div className="absolute bottom-[-100px] right-[-100px] w-96 h-96 bg-[#e6c699]/5 rounded-full filter blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+
           {/* Portrait Collage */}
-          <div className="lg:col-span-5 relative">
-            <div className="absolute top-4 left-4 right-[-16px] bottom-[-16px] border-2 border-[#81314c]/20 rounded-2xl -z-10" />
+          <div className="lg:col-span-5 relative group reveal-left">
+            <div className="absolute inset-0 bg-[#e6c699]/10 rounded-3xl -rotate-3 transform scale-102 transition-transform duration-500 group-hover:rotate-0 select-none" />
             <img
-              src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=600&auto=format&fit=crop"
+              src={aboutData.aboutImage || "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=600&auto=format&fit=crop"}
               alt="Nandhini Styling a Bride"
-              className="w-full h-[400px] md:h-[500px] object-cover rounded-2xl shadow-xl border border-[#eddee3]"
+              className="relative z-10 w-full h-[400px] md:h-[500px] object-cover rounded-3xl shadow-2xl border border-[#e6c699]/20 transition-transform duration-500 group-hover:scale-[1.01]"
             />
             {/* Embedded Mini Stat Badge */}
-            <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-md border border-[#eddee3] p-4.5 rounded-xl shadow-lg flex items-center gap-3">
-              <div className="p-3 bg-[#eddee3] text-[#81314c] rounded-full">
+            <div className="absolute bottom-6 left-6 bg-[#191215]/95 backdrop-blur-md border border-[#e6c699]/20 p-4.5 rounded-xl shadow-lg flex items-center gap-3">
+              <div className="p-3 bg-[#81314c] text-[#e6c699] rounded-full">
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <div>
-                <span className="block text-xs text-gray-400 font-sans tracking-wider uppercase font-semibold">Quality Guarantee</span>
-                <span className="block text-sm font-serif font-bold text-[#1F2937]">MAC, Chanel & Dior Only</span>
+                <span className="block text-[10px] text-gray-400 font-sans tracking-wider uppercase font-semibold">Quality Guarantee</span>
+                <span className="block text-sm font-serif font-bold text-[#e6c699]">MAC, Chanel & Dior Only</span>
               </div>
             </div>
           </div>
 
           {/* Artist Text bio preview */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-1.5 text-xs text-[#81314c] font-sans uppercase font-semibold tracking-widest">
+          <div className="lg:col-span-7 space-y-6 reveal-right">
+            <div className="inline-flex items-center gap-1.5 text-xs text-[#e6c699] font-sans uppercase font-semibold tracking-widest">
               <Sparkles className="w-3.5 h-3.5" /> MEET THE MAESTRO
             </div>
-            <h2 className="text-3xl md:text-5xl font-serif text-[#1F2937] tracking-tight">
+            <h2 style={{ fontFamily: "'Italiana', serif" }} className="text-3xl md:text-5xl text-white tracking-tight leading-tight">
               Crafting Flawless Memories For Elegant Individuals
             </h2>
-            <p className="text-gray-650 text-sm md:text-base leading-relaxed font-sans whitespace-pre-line">
+            <p className="text-gray-300 text-sm md:text-base leading-relaxed font-sans whitespace-pre-line font-light">
               {aboutData.story}
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
               <div className="flex items-start gap-2.5">
-                <Check className="w-5 h-5 text-[#81314c] shrink-0 mt-0.5" />
-                <span className="text-xs md:text-sm text-gray-650 font-sans">Signature High-Definition Airbrush Base</span>
+                <Check className="w-5 h-5 text-[#e6c699] shrink-0 mt-0.5" />
+                <span className="text-xs md:text-sm text-gray-300 font-sans">Signature High-Definition Airbrush Base</span>
               </div>
               <div className="flex items-start gap-2.5">
-                <Check className="w-5 h-5 text-[#81314c] shrink-0 mt-0.5" />
-                <span className="text-xs md:text-sm text-gray-650 font-sans">Luxurious Lash Extensions & Hair Couture</span>
+                <Check className="w-5 h-5 text-[#e6c699] shrink-0 mt-0.5" />
+                <span className="text-xs md:text-sm text-gray-300 font-sans">Luxurious Lash Extensions & Hair Couture</span>
               </div>
               <div className="flex items-start gap-2.5">
-                <Check className="w-5 h-5 text-[#81314c] shrink-0 mt-0.5" />
-                <span className="text-xs md:text-sm text-gray-650 font-sans">In-Person Look Tryout Trials</span>
+                <Check className="w-5 h-5 text-[#e6c699] shrink-0 mt-0.5" />
+                <span className="text-xs md:text-sm text-gray-300 font-sans">In-Person Look Tryout Trials</span>
               </div>
               <div className="flex items-start gap-2.5">
-                <Check className="w-5 h-5 text-[#81314c] shrink-0 mt-0.5" />
-                <span className="text-xs md:text-sm text-gray-650 font-sans">Traditional Drape/Pleating Assistance</span>
+                <Check className="w-5 h-5 text-[#e6c699] shrink-0 mt-0.5" />
+                <span className="text-xs md:text-sm text-gray-300 font-sans">Traditional Drape/Pleating Assistance</span>
               </div>
             </div>
 
@@ -288,9 +316,9 @@ export const Home: React.FC<HomeProps> = ({
               <button
                 id="btn-nav-about-more"
                 onClick={() => onNavigate("about")}
-                className="inline-flex items-center gap-2 font-sans text-xs font-semibold uppercase tracking-widest text-[#81314c] hover:text-[#69233b] transition-all group"
+                className="inline-flex items-center gap-2 font-sans text-xs font-semibold uppercase tracking-widest text-[#e6c699] hover:text-[#f7e6cc] transition-all group"
               >
-                Read Fully Story <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+                Read Full Story <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform animate-pulse" />
               </button>
             </div>
           </div>
@@ -299,12 +327,12 @@ export const Home: React.FC<HomeProps> = ({
       </section>
 
       {/* 4. SERVICES PREVIEW SECTION */}
-      <section 
+      <section
         id="services-preview-section"
-        className="py-20 bg-gradient-to-b from-white to-[#eddee3]/20"
+        className="py-20 bg-gradient-to-b from-white to-[#eddee3]/20 reveal"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
             <div>
               <span className="text-xs text-[#81314c] font-sans uppercase tracking-widest font-semibold block mb-2">
@@ -323,15 +351,15 @@ export const Home: React.FC<HomeProps> = ({
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {activeServices.length > 0 ? (
               activeServices.map((service, index) => (
                 <div
                   id={`home-service-card-${index}`}
                   key={service.id}
-                  className="bg-white rounded-2xl overflow-hidden border border-[#eddee3] shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col h-full group"
+                  className="bg-white rounded-3xl overflow-hidden border border-[#eddee3]/70 shadow-md luxury-card-hover flex flex-col h-full group"
                 >
-                  <div className="h-64 relative overflow-hidden">
+                  <div className="h-48 relative overflow-hidden">
                     <img
                       src={service.image}
                       alt={service.title}
@@ -377,12 +405,12 @@ export const Home: React.FC<HomeProps> = ({
       </section>
 
       {/* 6. PORTFOLIO PREVIEW SECTION */}
-      <section 
+      <section
         id="portfolio-preview-section"
-        className="py-20 bg-gradient-to-b from-[#fbfaf9] to-white border-t border-[#eddee3]"
+        className="py-20 bg-gradient-to-b from-[#fbfaf9] to-white border-t border-[#eddee3] reveal"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
             <div>
               <span className="text-xs text-[#81314c] font-sans uppercase tracking-widest font-semibold block mb-2">
@@ -401,13 +429,13 @@ export const Home: React.FC<HomeProps> = ({
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {previewPortfolio.length > 0 ? (
               previewPortfolio.map((item, index) => (
                 <div
                   id={`home-portfolio-item-${index}`}
                   key={item.id}
-                  className="relative group rounded-2xl overflow-hidden aspect-[4/5] shadow-md cursor-pointer border border-[#eddee3]"
+                  className="relative group rounded-3xl overflow-hidden aspect-[4/5] shadow-md cursor-pointer border border-[#eddee3] luxury-card-hover"
                   onClick={() => onNavigate("portfolio")}
                 >
                   <img
@@ -434,45 +462,46 @@ export const Home: React.FC<HomeProps> = ({
         </div>
       </section>
 
-      {/* 7. TESTIMONIAL PREVIEW */}
-      <section 
+      {/* 7. TESTIMONIAL PREVIEW (DARK ACCENT THEME) */}
+      <section
         id="testimonials-preview-section"
-        className="py-20 bg-[#eddee3]/15 border-y border-[#eddee3]"
+        className="py-24 bg-[#191215] text-white border-y border-[#81314c]/20 relative overflow-hidden reveal"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center mb-12">
-            <span className="text-xs text-[#81314c] font-sans uppercase tracking-widest font-semibold block mb-2">
+        <div className="absolute inset-0 bg-radial from-[#81314c]/5 to-transparent pointer-events-none animate-pulse" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+          <div className="text-center mb-16">
+            <span className="text-xs text-[#e6c699] font-sans uppercase tracking-[0.25em] font-bold block mb-2 animate-fade-in">
               REAL CLIENT REACTIONS
             </span>
-            <h2 className="text-3xl md:text-5xl font-serif text-[#1F2937] tracking-tight">
+            <h2 style={{ fontFamily: "'Italiana', serif" }} className="text-3xl md:text-5xl text-white tracking-tight">
               What Our Brides Are Saying
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {previewReviews.map((rev, idx) => (
               <div
                 id={`home-testimonial-card-${idx}`}
                 key={rev.id}
-                className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-4"
+                className="bg-[#241a1e] p-8 rounded-3xl border border-white/5 space-y-4 luxury-card-hover"
               >
                 <div className="flex items-center gap-1">
                   {[...Array(rev.rating)].map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-current text-[#e6c699]" />
                   ))}
                 </div>
-                <p className="text-gray-600 text-sm italic font-sans leading-relaxed">
+                <p className="text-gray-300 text-sm italic font-sans leading-relaxed font-light">
                   "{rev.review}"
                 </p>
-                <div className="flex items-center gap-3.5 pt-4 border-t border-gray-50">
+                <div className="flex items-center gap-3.5 pt-4 border-t border-white/5">
                   <img
                     src={rev.photo}
                     alt={rev.name}
-                    className="w-11 h-11 object-cover rounded-full border border-[#eddee3]"
+                    className="w-11 h-11 object-cover rounded-full border border-[#81314c]/30"
                   />
                   <div>
-                    <h4 className="font-serif text-sm font-semibold text-[#1F2937]">
+                    <h4 className="font-serif text-sm font-semibold text-white">
                       {rev.name}
                     </h4>
                     <span className="block text-[10px] uppercase font-sans tracking-wider text-gray-400">
@@ -484,11 +513,11 @@ export const Home: React.FC<HomeProps> = ({
             ))}
           </div>
 
-          <div className="text-center mt-10">
+          <div className="text-center mt-12">
             <button
               id="btn-nav-testimonials-all animate-pulse"
               onClick={() => onNavigate("testimonials")}
-              className="inline-flex items-center gap-1.5 font-sans text-xs font-semibold uppercase tracking-widest bg-white border border-[#eddee3] text-[#81314c] px-6 py-3 rounded-full hover:bg-gray-50 transition-all"
+              className="inline-flex items-center gap-1.5 font-sans text-xs font-semibold uppercase tracking-widest bg-[#81314c] hover:bg-[#69233b] text-white px-8 py-3.5 rounded-full transition-all shadow-md shadow-[#81314c]/10 luxury-button-hover"
             >
               Read Additional Reviews ({testimonials.length}) <ArrowRight className="w-3.5 h-3.5" />
             </button>
@@ -498,12 +527,12 @@ export const Home: React.FC<HomeProps> = ({
       </section>
 
       {/* 8. INSTAGRAM AUTOMATION: LATEST BEAUTY TRANSFORMATIONS */}
-      <section 
+      <section
         id="instagram-automation-section"
-        className="py-24 bg-white border-t border-[#eddee3] transition-colors duration-300"
+        className="py-24 bg-white border-t border-[#eddee3] transition-colors duration-300 reveal"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           {/* Header */}
           <div className="text-center mb-12 space-y-3">
             <div className="inline-flex items-center gap-1.5 text-xs text-[#81314c] font-sans uppercase tracking-[0.2em] font-semibold bg-[#eddee3] px-4 py-1.5 rounded-full shadow-sm">
@@ -516,7 +545,7 @@ export const Home: React.FC<HomeProps> = ({
               Follow our latest bridal, reception, and high-fashion makeup journeys. Automatically updated when Nandhini posts.
             </p>
             <div className="pt-2">
-              <a 
+              <a
                 href={settings.instagramUrl || "https://instagram.com/nandhini.makeup"}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -538,11 +567,10 @@ export const Home: React.FC<HomeProps> = ({
                   setActiveTab(filter);
                   setVisibleLimit(6); // Reset limit on tab change
                 }}
-                className={`font-sans text-xs font-semibold uppercase tracking-widest px-5 py-2.5 rounded-full transition-all ${
-                  activeTab === filter
+                className={`font-sans text-xs font-semibold uppercase tracking-widest px-5 py-2.5 rounded-full transition-all ${activeTab === filter
                     ? "bg-[#81314c] text-white shadow-md shadow-[#81314c]/20"
                     : "bg-gray-100/90 hover:bg-gray-150 text-gray-600"
-                }`}
+                  }`}
               >
                 {filter}
               </button>
@@ -557,7 +585,7 @@ export const Home: React.FC<HomeProps> = ({
               <p className="text-xs font-sans text-gray-400 mt-1">Connect your Instagram Business Account in the dashboard to synchronize.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {filteredPosts.slice(0, visibleLimit).map((post, idx) => {
                 const isReel = post.mediaType === "REEL";
                 const isCarousel = post.mediaType === "CAROUSEL_ALBUM";
@@ -567,7 +595,7 @@ export const Home: React.FC<HomeProps> = ({
                   <div
                     key={post.id || idx}
                     onClick={() => handleOpenPreview(post)}
-                    className="group relative bg-[#fbfaf9] rounded-2xl overflow-hidden border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-350 cursor-pointer"
+                    className="group relative bg-[#fbfaf9] rounded-3xl overflow-hidden border border-gray-100 shadow-sm luxury-card-hover cursor-pointer"
                   >
                     {/* Media Container Aspect Ratio */}
                     <div className="relative aspect-[4/5] sm:aspect-square overflow-hidden bg-gray-900">
@@ -579,7 +607,7 @@ export const Home: React.FC<HomeProps> = ({
                         referrerPolicy="no-referrer"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-black/25 opacity-90 transition-all duration-300" />
-                      
+
                       {/* Badge badge */}
                       <span className="absolute top-4.5 right-4.5 font-sans text-[10px] font-bold uppercase tracking-widest bg-black/70 text-white px-3 py-1.5 rounded-full border border-white/10 flex items-center gap-1.5 z-10">
                         {isReel && (
@@ -624,11 +652,11 @@ export const Home: React.FC<HomeProps> = ({
                           year: 'numeric'
                         })}
                       </span>
-                      
+
                       <p className="text-gray-700 text-sm font-sans line-clamp-3 leading-relaxed">
                         {post.caption || "Signature beauty transformation by master artist Nandhini. Custom airbrush aesthetics."}
                       </p>
-                      
+
                       <div className="pt-2 flex items-center justify-between border-t border-gray-150">
                         <span className="text-[10px] uppercase font-sans tracking-widest text-[#e6c699] font-bold">
                           Bridal Artistry
@@ -661,12 +689,12 @@ export const Home: React.FC<HomeProps> = ({
       </section>
 
       {/* 8.5 DEDICATED REELS SHOWCASE */}
-      <section 
+      <section
         id="reels-showcase-section"
-        className="py-24 bg-[#fbfaf9] border-t border-[#eddee3] overflow-hidden"
+        className="py-24 bg-[#fbfaf9] border-t border-[#eddee3] overflow-hidden reveal"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <div className="space-y-2">
               <span className="inline-block text-xs text-[#81314c] font-sans uppercase tracking-[0.2em] font-semibold">
@@ -709,7 +737,7 @@ export const Home: React.FC<HomeProps> = ({
                     <div className="w-11 h-11 bg-[#81314c] text-white border border-[#eddee3]/20 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                       <Play className="w-4.5 h-4.5 fill-current ml-0.5 text-white" />
                     </div>
-                    
+
                     <p className="text-[11px] text-gray-200 font-sans line-clamp-3 leading-relaxed">
                       {reel.caption || "Stunning luxury makeover details. Click to view full transition video."}
                     </p>
@@ -737,21 +765,21 @@ export const Home: React.FC<HomeProps> = ({
       {/* LUXURY INTERACTIVE MEDIA POPUP WITH DYNAMIC GENERATED SEO HEADERS */}
       {previewMedia && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
-          <div 
+          <div
             className="relative bg-white text-[#1F2937] rounded-3xl overflow-hidden max-w-4xl w-full max-h-[90vh] md:h-[650px] shadow-2xl flex flex-col md:flex-row transform scale-95 md:scale-100 transition-all duration-300"
           >
             {/* Left Column: Media Stage with simulated video player */}
             <div className="relative md:w-3/5 bg-black flex items-center justify-center overflow-hidden h-[300px] md:h-full shrink-0">
               {previewMedia.mediaType === "REEL" || previewMedia.mediaType === "VIDEO" ? (
                 <div className="relative w-full h-full flex flex-col items-center justify-center bg-gray-950">
-                  <img 
-                    src={previewMedia.mediaUrl} 
-                    alt="Video preview" 
-                    className="absolute inset-0 w-full h-full object-cover filter brightness-75 select-none" 
+                  <img
+                    src={previewMedia.mediaUrl}
+                    alt="Video preview"
+                    className="absolute inset-0 w-full h-full object-cover filter brightness-75 select-none"
                     referrerPolicy="no-referrer"
                   />
                   <div className="absolute inset-0 bg-[#81314c]/20 mix-blend-color" />
-                  
+
                   {/* Dynamic simulated spectrum for live visual video indicators */}
                   <div className="relative z-10 space-y-4 text-center px-4">
                     <div className="w-16 h-16 bg-[#81314c] text-white border-2 border-white rounded-full flex items-center justify-center mx-auto shadow-xl transform animate-pulse cursor-pointer hover:scale-105 active:scale-95">
@@ -787,7 +815,7 @@ export const Home: React.FC<HomeProps> = ({
             {/* Right Column: Descriptions & SEO Structured Meta Generative engine */}
             <div className="md:w-2/5 p-6 md:p-8 flex flex-col justify-between overflow-y-auto h-[400px] md:h-full">
               <div className="space-y-6">
-                
+
                 {/* Header controls info */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -796,7 +824,7 @@ export const Home: React.FC<HomeProps> = ({
                       Interactive Live Sync
                     </span>
                   </div>
-                  <button 
+                  <button
                     style={{ cursor: "pointer" }}
                     onClick={handleClosePreview}
                     className="p-1.5 bg-gray-100 hover:bg-[#eddee3] hover:text-[#81314c] rounded-full transition-all text-gray-500"
@@ -840,7 +868,7 @@ export const Home: React.FC<HomeProps> = ({
                     <div>
                       <span className="block text-[9px] font-mono uppercase text-gray-400">Generated Meta Title</span>
                       <p className="text-[11px] font-sans font-semibold text-gray-700 pr-1 select-all leading-snug">
-                        {previewMedia.caption 
+                        {previewMedia.caption
                           ? `${previewMedia.caption.split(/[!.\n#]/)[0] || "Beauty Transformation"} | Nandhini Bridal Couture`
                           : "Luxury Beauty Transformations | Nandhini Bridal Couture"}
                       </p>
@@ -848,7 +876,7 @@ export const Home: React.FC<HomeProps> = ({
                     <div>
                       <span className="block text-[9px] font-mono uppercase text-gray-400">Generated Meta Description</span>
                       <p className="text-[10px] font-sans text-gray-500 italic leading-snug select-all">
-                        {previewMedia.caption 
+                        {previewMedia.caption
                           ? `Book tailored professional makeup. ${previewMedia.caption.substring(0, 110)}... Exclusive HD bridal makeup in Bangalore by master Nandhini.`
                           : "Book professional makeup services. Experience the radiant glow, custom contours, and luxury Saree draping with Bangalore's leading makeup artist."}
                       </p>
@@ -870,7 +898,7 @@ export const Home: React.FC<HomeProps> = ({
                   View Original on Instagram
                   <ExternalLink className="w-3.5 h-3.5 text-white/85" />
                 </a>
-                
+
                 <button
                   style={{ cursor: "pointer" }}
                   onClick={handleClosePreview}
@@ -886,7 +914,7 @@ export const Home: React.FC<HomeProps> = ({
       )}
 
       {/* 9. LARGE CTA BOOKING BANNER SECTION */}
-      <section 
+      <section
         id="cta-section"
         className="relative py-24 md:py-32 bg-[#1F2937] text-white text-center overflow-hidden"
       >

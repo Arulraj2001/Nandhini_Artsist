@@ -20,6 +20,8 @@ export const Contact: React.FC<ContactProps> = ({ settings, onBookingAdded }) =>
 
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [lastSubmission, setLastSubmission] = useState<any>(null);
   const [error, setError] = useState("");
 
   const eventTypes = [
@@ -53,7 +55,13 @@ export const Contact: React.FC<ContactProps> = ({ settings, onBookingAdded }) =>
         message: formData.message,
       });
 
+      setLastSubmission({
+        name: formData.name,
+        eventType: formData.eventType,
+        eventDate: formData.eventDate
+      });
       setSubmitted(true);
+      setShowPopup(true);
       setFormData({
         name: "",
         phone: "",
@@ -79,7 +87,7 @@ export const Contact: React.FC<ContactProps> = ({ settings, onBookingAdded }) =>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Page Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 reveal">
           <div className="inline-flex items-center gap-1.5 text-xs text-[#81314c] bg-[#eddee3] px-3.5 py-1.5 rounded-full uppercase tracking-widest font-semibold font-sans mb-3">
             <Mail className="w-3.5 h-3.5" /> SECURING THE DATE
           </div>
@@ -91,7 +99,7 @@ export const Contact: React.FC<ContactProps> = ({ settings, onBookingAdded }) =>
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch reveal">
           
           {/* Left Side: Professional Studio Coordinates */}
           <div className="lg:col-span-5 bg-[#1F2937] text-white p-8 md:p-12 rounded-3xl flex flex-col justify-between relative overflow-hidden shadow-xl border border-gray-800">
@@ -351,6 +359,70 @@ export const Contact: React.FC<ContactProps> = ({ settings, onBookingAdded }) =>
         )}
 
       </div>
+
+      {/* Success Popup Notification Modal */}
+      {showPopup && lastSubmission && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm flex items-center justify-center" id="contact-success-popup">
+          <div className="relative bg-white text-gray-900 rounded-3xl max-w-md w-full p-8 md:p-10 shadow-2xl border border-gray-150 transform transition-all duration-350 scale-100 flex flex-col items-center text-center space-y-6">
+            
+            {/* Success Icon Animation Wrapper */}
+            <div className="relative w-20 h-20 bg-[#eddee3] rounded-full flex items-center justify-center text-[#81314c] shadow-inner mb-2 animate-bounce">
+              <CheckCircle className="w-10 h-10 stroke-[2]" />
+              <div className="absolute -top-1 -right-1 bg-[#e6c699] text-white p-1 rounded-full">
+                <Sparkles className="w-4 h-4 fill-current" />
+              </div>
+            </div>
+
+            {/* Content info */}
+            <div className="space-y-2.5">
+              <span className="text-[10px] uppercase font-sans tracking-[0.25em] font-extrabold text-[#81314c]">
+                Booking Request Secured
+              </span>
+              <h3 className="text-2xl font-serif text-[#1F2937] tracking-tight">
+                Consultation Logged!
+              </h3>
+              <p className="text-gray-500 text-xs sm:text-sm font-sans leading-relaxed">
+                Thank you, lovely. Nandhini's coordinator has registered your request and holds a tentative schedule slot for you.
+              </p>
+            </div>
+
+            {/* Event Summary Box */}
+            <div className="bg-[#fbfaf9] border border-[#eddee3] p-4.5 rounded-2xl w-full text-left font-sans text-xs space-y-2.5 shadow-inner">
+              <div className="flex justify-between border-b border-gray-100 pb-1.5">
+                <span className="text-gray-400">Bride's Name:</span>
+                <span className="font-semibold text-gray-700">{lastSubmission.name}</span>
+              </div>
+              <div className="flex justify-between border-b border-gray-100 pb-1.5">
+                <span className="text-gray-400">Celebration Category:</span>
+                <span className="font-semibold text-gray-700">{lastSubmission.eventType}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Celebrated Date:</span>
+                <span className="font-semibold text-[#81314c]">
+                  {new Date(lastSubmission.eventDate).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </span>
+              </div>
+            </div>
+
+            {/* CTA action */}
+            <button
+              id="btn-close-success-popup"
+              onClick={() => {
+                setShowPopup(false);
+                setSubmitted(false);
+              }}
+              className="w-full bg-[#81314c] hover:bg-[#69233b] text-white font-sans text-xs font-semibold uppercase tracking-widest py-4 rounded-full transition-transform transform active:scale-95 shadow-md shadow-[#81314c]/10"
+            >
+              Back to Contact Details
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

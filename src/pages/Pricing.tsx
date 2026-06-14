@@ -13,7 +13,7 @@ export const Pricing: React.FC<PricingProps> = ({ pricingPackages, onNavigate })
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Page Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 reveal">
           <div className="inline-flex items-center gap-1.5 text-xs text-[#81314c] bg-[#eddee3] px-3.5 py-1.5 rounded-full uppercase tracking-widest font-semibold font-sans mb-3">
             <BadgePercent className="w-3.5 h-3.5" /> LUXE INVESTMENTS
           </div>
@@ -26,16 +26,16 @@ export const Pricing: React.FC<PricingProps> = ({ pricingPackages, onNavigate })
         </div>
 
         {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-24 reveal">
           {pricingPackages.map((pkg) => {
             const isPopular = pkg.isPopular || pkg.name.toLowerCase().includes("gold");
             return (
               <div
                 id={`pricing-card-${pkg.id}`}
                 key={pkg.id}
-                className={`rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 relative ${
+                className={`rounded-3xl p-8 flex flex-col justify-between relative luxury-card-hover ${
                   isPopular
-                    ? "bg-[#1F2937] text-white shadow-xl scale-102 lg:scale-105 border-2 border-[#e6c699]"
+                    ? "bg-[#1F2937] text-white shadow-2xl scale-102 lg:scale-105 border-2 border-[#e6c699]"
                     : "bg-white text-gray-900 border border-gray-150 shadow-sm"
                 }`}
               >
@@ -88,7 +88,7 @@ export const Pricing: React.FC<PricingProps> = ({ pricingPackages, onNavigate })
                       onNavigate("contact");
                       window.scrollTo({ top: 120, behavior: "smooth" });
                     }}
-                    className={`w-full text-center font-sans text-xs font-semibold uppercase tracking-widest py-4 rounded-full transition-all duration-200 transform active:scale-98 ${
+                    className={`w-full text-center font-sans text-xs font-semibold uppercase tracking-widest py-4 rounded-full transition-all duration-200 transform active:scale-98 luxury-button-hover ${
                       isPopular
                         ? "bg-gradient-to-r from-[#e6c699] to-[#81314c] hover:from-[#c29c2c] hover:to-[#a35e69] text-white shadow-lg"
                         : "bg-gray-100 hover:bg-[#81314c] hover:text-white text-[#1F2937]"

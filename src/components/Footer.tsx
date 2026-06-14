@@ -38,16 +38,16 @@ export const Footer: React.FC<FooterProps> = ({
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
         {/* Top Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-12 xl:gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-12 xl:gap-16 reveal">
 
           {/* Brand */}
           <div className="space-y-5 xl:pr-8">
             <div>
-              <h2 className="font-serif text-3xl font-bold tracking-[0.15em]">
+              <h2 style={{ fontFamily: "'Cinzel Decorative', 'Cinzel', serif" }} className="text-3.5xl font-bold tracking-[0.12em] bg-gradient-to-r from-[#e6c699] via-[#f7e6cc] to-[#e6c699] bg-clip-text text-transparent">
                 {settings.logoText || "NANDHINI"}
               </h2>
 
-              <p className="text-[#B76E79] text-[11px] uppercase tracking-[0.35em] mt-2">
+              <p className="text-[#e6c699] text-[10px] uppercase tracking-[0.4em] mt-2 font-semibold font-sans">
                 Makeup Artist
               </p>
             </div>
@@ -195,7 +195,7 @@ export const Footer: React.FC<FooterProps> = ({
             <div className="text-center lg:text-left">
               <p className="text-sm text-gray-400">
                 © {currentYear}{" "}
-                <span className="font-semibold text-white">
+                <span style={{ fontFamily: "'Cinzel Decorative', 'Cinzel', serif" }} className="font-bold text-[#e6c699] tracking-wider ml-1">
                   {settings.logoText || "NANDHINI"}
                 </span>
                 . All Rights Reserved.

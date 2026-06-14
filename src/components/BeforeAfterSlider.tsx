@@ -103,9 +103,9 @@ export const BeforeAfterSlider: React.FC = () => {
           style={{ left: `${sliderPosition}%` }}
         >
           {/* SLIDER HANDLE */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white border-2 border-[#81314c] shadow-xl rounded-full flex items-center justify-center pointer-events-none transition-transform duration-100 scale-100 hover:scale-110">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white border-2 border-[#e6c699] shadow-[0_0_15px_rgba(129,49,76,0.35)] rounded-full flex items-center justify-center pointer-events-none transition-transform duration-100 scale-100 hover:scale-110 pulse-soft">
             <svg
-              className="w-5 h-5 text-[#81314c] fill-current"
+              className="w-6 h-6 text-[#81314c] fill-current"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >

@@ -1,11 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Lato:wght@300;400;700&family=Great+Vibes&family=Cinzel:wght@400;500;700;900&family=Playfair+Display:ital,wght@0,450;0,700;1,450&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Great+Vibes&family=Cinzel:wght@400;500;700;900&family=Cinzel+Decorative:wght@400;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Lato", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "DM Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
   --font-accent: "Great Vibes", cursive;
-  --font-brand: "Cinzel", "Playfair Display", "Cormorant Garamond", serif;
+  --font-brand: "Cinzel", "Playfair Display", serif;
+  --font-decorative: "Cinzel Decorative", "Cinzel", serif;
 }
 
 /* Master Aesthetic Global Smoothings */
@@ -27,20 +28,20 @@ body {
 
 /* Glassmorphism custom styling utilities */
 .glass-effect {
-  background: rgba(251, 250, 249, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(251, 250, 249, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .dark .glass-effect {
-  background: rgba(17, 12, 14, 0.75);
+  background: rgba(17, 12, 14, 0.82);
 }
 
 /* Smooth transitions for all theme-dependent elements */
 * {
-  transition-property: background-color, border-color, text-decoration-color, fill, stroke;
+  transition-property: background-color, border-color, text-decoration-color, fill, stroke, transform, box-shadow;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+  transition-duration: 200ms;
 }
 
 /* Animated keyframes for standard fade-in effects */
@@ -52,3 +53,419 @@ body {
 .animate-fade-in {
   animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Custom luxury style helpers */
+.luxury-gradient-text {
+  background: linear-gradient(135deg, #81314c 0%, #b84f70 50%, #81314c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.luxury-gradient-text-light {
+  background: linear-gradient(135deg, #e6c699 0%, #f7e6cc 50%, #e6c699 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.luxury-card-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.luxury-card-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 40px -12px rgba(129, 49, 76, 0.12);
+}
+
+.luxury-button-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.luxury-button-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px -5px rgba(129, 49, 76, 0.3);
+}
+
+.pulse-soft {
+  animation: pulse-animation 3s infinite;
+}
+
+@keyframes pulse-animation {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Luxury mesh background */
+.luxury-mesh-bg {
+  background-color: #faf7f5;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(129, 49, 76, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(230, 198, 153, 0.09) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(129, 49, 76, 0.04) 0px, transparent 50%);
+}
+
+/* Glassmorphism ribbon */
+.glass-ribbon {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(237, 222, 227, 0.6);
+  box-shadow: 0 24px 50px -12px rgba(129, 49, 76, 0.09);
+}
+
+/* ============================================
+   SCROLL REVEAL ANIMATION SYSTEM
+   ============================================ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-32px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(32px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-delay-1 { transition-delay: 80ms; }
+.reveal-delay-2 { transition-delay: 160ms; }
+.reveal-delay-3 { transition-delay: 240ms; }
+.reveal-delay-4 { transition-delay: 320ms; }
+
+/* ============================================
+   MARQUEE / SCROLLING TEXT STRIP
+   ============================================ */
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.marquee-track {
+  overflow: hidden;
+}
+
+/* Pause on hover */
+.marquee-track:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
+/* ============================================
+   FLOATING ANIMATION
+   ============================================ */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 3.5s ease-in-out infinite;
+}
+
+/* ============================================
+   SPIN SLOW (Instagram icon etc.)
+   ============================================ */
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+/* ============================================
+   SHIMMER EFFECT
+   ============================================ */
+
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position:  200% center; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #e6c699 0%, #f7e6cc 50%, #e6c699 100%);
+  background-size: 200% auto;
+  animation: shimmer 2.5s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   GRADIENT BORDER UTILITY
+   ============================================ */
+
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, #e6c699, #81314c, #e6c699);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ============================================
+   MODERN SECTION DIVIDER
+   ============================================ */
+
+.section-fade-top {
+  position: relative;
+}
+
+.section-fade-top::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, rgba(251, 250, 249, 1), transparent);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ============================================
+   NAVBAR SCROLL-AWARE
+   ============================================ */
+
+.navbar-at-top {
+  background: transparent !important;
+  border-bottom-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.navbar-scrolled {
+  background: rgba(251, 250, 249, 0.92) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(237, 222, 227, 0.8) !important;
+  box-shadow: 0 2px 20px rgba(129, 49, 76, 0.06) !important;
+}
+
+/* ============================================
+   ENHANCED HOVER INTERACTIONS
+   ============================================ */
+
+.luxury-card-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.luxury-card-hover:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 30px 55px -12px rgba(129, 49, 76, 0.15);
+}
+
+/* Image zoom on parent hover */
+.img-zoom img {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.img-zoom:hover img {
+  transform: scale(1.06);
+}
+
+/* ============================================
+   DECORATIVE DOT GRID
+   ============================================ */
+
+.dot-grid-bg {
+  background-image: radial-gradient(rgba(129, 49, 76, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ============================================
+   GLOW EFFECT
+   ============================================ */
+
+.glow-rose {
+  box-shadow: 0 0 40px rgba(129, 49, 76, 0.18);
+}
+
+.glow-gold {
+  box-shadow: 0 0 40px rgba(230, 198, 153, 0.25);
+}
+
+/* ============================================
+   SMOOTH PAGE TRANSITION
+   ============================================ */
+
+.page-enter {
+  animation: pageEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   DARK MODE SYSTEM
+   ============================================ */
+
+/* Page-level backgrounds */
+html.dark #home-page,
+html.dark #about-page,
+html.dark #services-page,
+html.dark #portfolio-page,
+html.dark #testimonials-page,
+html.dark #pricing-page,
+html.dark #contact-page {
+  background-color: #0d0a0c !important;
+}
+
+/* Footer */
+html.dark #main-footer {
+  background-color: #080507 !important;
+  border-top-color: #1e1619 !important;
+}
+
+/* White card/panel backgrounds */
+html.dark .bg-white {
+  background-color: #1c1318 !important;
+  border-color: #2a2028 !important;
+}
+
+/* Gray tinted backgrounds */
+html.dark .bg-gray-50 { background-color: #150f12 !important; }
+html.dark .bg-gray-100 { background-color: #1c1318 !important; }
+html.dark .bg-gray-200 { background-color: #221820 !important; }
+
+/* The subtle pink tinted bg (#eddee3) used in badges and inputs */
+html.dark [class*="bg-[#eddee3]"] {
+  background-color: #2a1f25 !important;
+}
+
+/* Dark navy sections (#1F2937) become richer dark */
+html.dark [class*="bg-[#1F2937]"] {
+  background-color: #100d10 !important;
+}
+
+/* Luxury mesh background in dark */
+html.dark .luxury-mesh-bg {
+  background-color: #0d0a0c;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(129, 49, 76, 0.09) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(230, 198, 153, 0.06) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(129, 49, 76, 0.06) 0px, transparent 50%);
+}
+
+/* Dot grid in dark */
+html.dark .dot-grid-bg {
+  background-image: radial-gradient(rgba(230, 198, 153, 0.06) 1px, transparent 1px);
+}
+
+/* Text overrides */
+html.dark [class*="text-[#1F2937]"] { color: #f0e8ec !important; }
+html.dark [class*="text-gray-900"]  { color: #f0e8ec !important; }
+html.dark [class*="text-gray-800"]  { color: #e8dde2 !important; }
+html.dark [class*="text-gray-700"]  { color: #cbbac3 !important; }
+html.dark [class*="text-gray-600"]  { color: #a58e98 !important; }
+html.dark [class*="text-gray-500"]  { color: #8a7680 !important; }
+html.dark [class*="text-gray-400"]  { color: #6e5e68 !important; }
+
+/* Border overrides */
+html.dark [class*="border-gray-100"] { border-color: #221820 !important; }
+html.dark [class*="border-gray-150"] { border-color: #221820 !important; }
+html.dark [class*="border-gray-200"] { border-color: #2a2028 !important; }
+html.dark [class*="border-gray-800"] { border-color: #1e1619 !important; }
+html.dark [class*="border-[#eddee3]"] { border-color: #2a1f25 !important; }
+html.dark [class*="border-gray-50"]  { border-color: #1e1619 !important; }
+
+/* Input fields in dark */
+html.dark input,
+html.dark textarea,
+html.dark select {
+  background-color: #1c1318 !important;
+  border-color: #2a2028 !important;
+  color: #f0e8ec !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #6e5e68 !important;
+}
+
+/* Navbar in dark */
+html.dark .navbar-scrolled {
+  background: rgba(13, 10, 12, 0.94) !important;
+  border-bottom-color: #1e1619 !important;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Mobile drawer dark */
+html.dark #mobile-drawer {
+  background-color: #1a1218 !important;
+  border-color: #2a2028 !important;
+}
+
+/* Glass ribbon dark */
+html.dark .glass-ribbon {
+  background: rgba(26, 18, 24, 0.92);
+  border-color: rgba(42, 32, 40, 0.6);
+}
+
+/* Section fade top in dark */
+html.dark .section-fade-top::before {
+  background: linear-gradient(to bottom, rgba(13, 10, 12, 1), transparent);
+}
+
+/* Loading spinner screen */
+html.dark [class*="min-h-"][class*="flex"][class*="bg-[#fbfaf9]"] {
+  background-color: #0d0a0c !important;
+}
+
+/* Card hover shadow in dark */
+html.dark .luxury-card-hover:hover {
+  box-shadow: 0 30px 55px -12px rgba(0, 0, 0, 0.6);
+}
+
+/* Pricing FAQ panel in dark */
+html.dark [class*="bg-[#fbfaf9]"][class*="border"][class*="border-[#eddee3]"] {
+  background-color: #1c1318 !important;
+}
+

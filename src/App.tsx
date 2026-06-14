@@ -26,6 +26,23 @@ import {
 export default function App() {
   const [currentPage, setCurrentPage] = useState<string>("home");
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isDark, setIsDark] = useState<boolean>(() => localStorage.getItem("theme") === "dark");
+
+  const toggleDark = () => {
+    setIsDark((prev) => {
+      const next = !prev;
+      localStorage.setItem("theme", next ? "dark" : "light");
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDark]);
   
   // Luxury State Cache
   const [services, setServices] = useState<Service[]>([]);
@@ -75,8 +92,7 @@ export default function App() {
       authListener = subscription;
     }
 
-    // Clean up any remaining dark mode classes
-    document.documentElement.classList.remove("dark");
+    // Dark mode init is handled by the isDark useEffect
 
     return () => {
       if (authListener) {
@@ -114,6 +130,18 @@ export default function App() {
   useEffect(() => {
     loadGlobalCollections();
   }, []);
+
+  // Scroll-reveal IntersectionObserver — wires up .reveal elements each page change
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("revealed"); }),
+      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+    );
+    const timer = setTimeout(() => {
+      document.querySelectorAll(".reveal, .reveal-left, .reveal-right").forEach((el) => observer.observe(el));
+    }, 80);
+    return () => { clearTimeout(timer); observer.disconnect(); };
+  }, [currentPage]);
 
   // Background Auto-sync process (30 minutes check)
   useEffect(() => {
@@ -316,7 +344,9 @@ export default function App() {
 
   // Route router selector
   const renderCurrentPage = () => {
-    if (syncLoading || !settings) {
+    // Show loading only for non-home pages while initial data loads
+    // Home page renders immediately with fallback/default values
+    if ((syncLoading || !settings) && currentPage !== "home") {
       return (
         <div className="min-h-[70vh] flex items-center justify-center flex-col gap-3.5 bg-[#fbfaf9]">
           <div className="w-10 h-10 border-2 border-[#81314c] border-t-transparent rounded-full animate-spin" />
@@ -331,7 +361,7 @@ export default function App() {
       case "home":
         return (
           <Home
-            settings={settings}
+            settings={settings || ({} as WebsiteSettings)}
             services={services}
             portfolio={portfolio}
             testimonials={testimonials}
@@ -375,7 +405,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen text-[#1F2937] antialiased bg-[#fbfaf9] selection:bg-[#eddee3] selection:text-[#81314c]">
+    <div className={`flex flex-col min-h-screen antialiased selection:bg-[#eddee3] selection:text-[#81314c] transition-colors duration-500 ${isDark ? "bg-[#0d0a0c] text-[#f0e8ec]" : "bg-[#fbfaf9] text-[#1F2937]"}`}>
       {/* 1. Global Elite Navbar */}
       {settings && (
         <Navbar
@@ -386,12 +416,16 @@ export default function App() {
           settings={settings}
           isAdmin={isAdmin}
           onLogout={handleLogout}
+          isDark={isDark}
+          onToggleDark={toggleDark}
         />
       )}
 
       {/* 2. Main Stage Router Content */}
       <main className="flex-grow">
-        {renderCurrentPage()}
+        <div key={currentPage} className="page-enter">
+          {renderCurrentPage()}
+        </div>
       </main>
 
       {/* 3. Global Footer Links */}

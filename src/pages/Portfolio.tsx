@@ -43,7 +43,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ portfolio }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Page Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 reveal">
           <div className="inline-flex items-center gap-1.5 text-xs text-[#81314c] bg-[#eddee3] px-3.5 py-1.5 rounded-full uppercase tracking-widest font-semibold font-sans mb-3">
             <Sparkles className="w-3.5 h-3.5" /> THE DIGITAL LOOKBOOK
           </div>
@@ -56,9 +56,9 @@ export const Portfolio: React.FC<PortfolioProps> = ({ portfolio }) => {
         </div>
 
         {/* Category Filters Bar */}
-        <div 
+        <div
           id="portfolio-filters-bar"
-          className="flex flex-wrap items-center justify-center gap-2 mb-12"
+          className="flex flex-wrap items-center justify-center gap-2 mb-12 reveal"
         >
           {categories.map((cat) => {
             const active = selectedCategory === cat;
@@ -82,7 +82,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ portfolio }) => {
         {/* Masonry-Style Pinterest Grid */}
         <div 
           id="portfolio-masonry-grid"
-          className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6"
+          className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-5 space-y-5"
         >
           {filteredItems.length > 0 ? (
             filteredItems.map((item, index) => (

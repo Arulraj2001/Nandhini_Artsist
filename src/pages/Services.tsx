@@ -15,7 +15,7 @@ export const Services: React.FC<ServicesProps> = ({ services, onNavigate }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Page Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 reveal">
           <div className="inline-flex items-center gap-1.5 text-xs text-[#81314c] bg-[#eddee3] px-3.5 py-1.5 rounded-full uppercase tracking-widest font-semibold font-sans mb-3">
             <Sparkles className="w-3.5 h-3.5" /> THE MENU OF BEAUTY
           </div>
@@ -28,16 +28,16 @@ export const Services: React.FC<ServicesProps> = ({ services, onNavigate }) => {
         </div>
 
         {/* Services Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
           {activeServices.length > 0 ? (
             activeServices.map((service, idx) => (
               <div
                 id={`services-card-${service.id}`}
                 key={service.id}
-                className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl border border-gray-100 hover:-translate-y-2 transition-all duration-300 flex flex-col h-full group"
+                className="bg-white rounded-3xl overflow-hidden border border-[#eddee3]/65 shadow-sm luxury-card-hover flex flex-col h-full group"
               >
                 {/* Image Showcase */}
-                <div className="h-64 relative overflow-hidden">
+                <div className="h-48 relative overflow-hidden">
                   <img
                     src={service.image}
                     alt={service.title}
@@ -75,7 +75,7 @@ export const Services: React.FC<ServicesProps> = ({ services, onNavigate }) => {
                         onNavigate("contact");
                         window.scrollTo({ top: 120, behavior: "smooth" });
                       }}
-                      className="bg-[#81314c] group-hover:bg-[#69233b] text-white font-bold uppercase tracking-widest px-4 py-2.5 rounded-lg transition-colors shadow-sm"
+                      className="bg-[#81314c] hover:bg-[#69233b] text-white font-bold uppercase tracking-widest px-4 py-2.5 rounded-full transition-colors shadow-sm luxury-button-hover"
                     >
                       Reserve Now
                     </button>
@@ -89,7 +89,7 @@ export const Services: React.FC<ServicesProps> = ({ services, onNavigate }) => {
         </div>
 
         {/* Quality standard checklist */}
-        <div className="mt-20 bg-white border border-[#eddee3] rounded-2xl p-8 md:p-12">
+        <div className="mt-20 bg-white border border-[#eddee3] rounded-2xl p-8 md:p-12 reveal">
           <div className="text-center mb-10">
             <span className="text-[#81314c] text-xs font-sans uppercase tracking-widest font-bold">THE STANDARDS OF MAESTROS</span>
             <h3 className="font-serif text-2xl md:text-3xl mt-1 text-[#1F2937]">What’s Included in Every Session?</h3>
