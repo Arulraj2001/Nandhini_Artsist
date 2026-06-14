@@ -131,17 +131,23 @@ export default function App() {
     loadGlobalCollections();
   }, []);
 
-  // Scroll-reveal IntersectionObserver — wires up .reveal elements each page change
+  // Scroll-reveal IntersectionObserver: wire up newly mounted reveal elements after page/data changes.
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("revealed"); }),
       { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
     );
     const timer = setTimeout(() => {
-      document.querySelectorAll(".reveal, .reveal-left, .reveal-right").forEach((el) => observer.observe(el));
+      document.querySelectorAll(".reveal, .reveal-left, .reveal-right").forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          el.classList.add("revealed");
+        }
+        observer.observe(el);
+      });
     }, 80);
     return () => { clearTimeout(timer); observer.disconnect(); };
-  }, [currentPage]);
+  }, [currentPage, settings, syncLoading]);
 
   // Background Auto-sync process (30 minutes check)
   useEffect(() => {

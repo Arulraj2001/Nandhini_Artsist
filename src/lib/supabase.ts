@@ -261,7 +261,7 @@ export const mapInstagramSyncLog = {
     createdAt: db.created_at || undefined,
   }),
   toDb: (react: Partial<InstagramSyncLog>) => ({
-    id: react.id,
+    // Note: id is purposely omitted since DB table uses gen_random_uuid()
     status: react.status,
     message: react.message,
     posts_imported: react.postsImported,

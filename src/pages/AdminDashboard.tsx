@@ -1969,8 +1969,84 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogoutSuccess 
                     </div>
 
                   </div>
+                  </div> {/* Close outer grid */}
 
-                </div> {/* Close outer details grid */}
+                {/* Instagram Posts Management Section */}
+                <div className="bg-white border border-gray-150 rounded-3xl p-6 sm:p-8 space-y-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-3">
+                    <div>
+                      <h3 className="font-serif text-lg text-gray-800 font-bold">Synced Instagram Posts</h3>
+                      <p className="text-xs text-gray-500 mt-1">Manage and delete individual Instagram posts synced to your lookbook.</p>
+                    </div>
+                    <span className="text-[10px] font-mono text-gray-500 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-200">
+                      {instagramPosts.length} items total
+                    </span>
+                  </div>
+
+                  {instagramPosts.length === 0 ? (
+                    <div className="text-center py-12 bg-[#fbfaf9] border border-dashed border-gray-200 rounded-2xl">
+                      <Instagram className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                      <p className="text-xs font-sans text-gray-500">No Instagram posts synced yet. Run a sync to populate.</p>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto rounded-xl border border-gray-150">
+                      <table className="w-full text-left border-collapse text-xs font-sans">
+                        <thead>
+                          <tr className="bg-gray-55 border-b border-gray-250 text-[10px] uppercase tracking-wider font-bold text-gray-500">
+                            <th className="px-5 py-3.5 font-sans">Media</th>
+                            <th className="px-5 py-3.5 font-sans">Type</th>
+                            <th className="px-5 py-3.5 font-sans">Caption</th>
+                            <th className="px-5 py-3.5 font-sans text-center">Date</th>
+                            <th className="px-5 py-3.5 text-center">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-150">
+                          {instagramPosts.slice(0, 20).map((post, idx) => (
+                            <tr key={post.id || idx} className="hover:bg-gray-50/50">
+                              <td className="px-5 py-4">
+                                <img 
+                                  src={post.mediaUrl} 
+                                  alt="Post" 
+                                  className="w-12 h-12 object-cover rounded-lg border border-gray-200"
+                                />
+                              </td>
+                              <td className="px-5 py-4">
+                                <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full">
+                                  {post.mediaType}
+                                </span>
+                              </td>
+                              <td className="px-5 py-4 max-w-[200px] truncate text-gray-600">
+                                {post.caption || "No caption"}
+                              </td>
+                              <td className="px-5 py-4 font-mono text-center text-gray-500">
+                                {new Date(post.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                              </td>
+                              <td className="px-5 py-4 text-center">
+                                <button
+                                  onClick={async () => {
+                                    if (!confirm("Delete this Instagram post from the lookbook?")) return;
+                                    try {
+                                      await api.deleteInstagramPost(post.id);
+                                      setActionSuccess("Instagram post removed successfully.");
+                                      clearSuccessDelay();
+                                      loadData();
+                                    } catch (err) {
+                                      setActionError("Failed to delete Instagram post.");
+                                    }
+                                  }}
+                                  className="p-1.5 px-2.5 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 rounded-lg text-xs transition-colors"
+                                  title="Delete post"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
 
                 {/* Bottom Section: Live Sync Logs tracker */}
                 <div className="bg-white border border-gray-150 rounded-3xl p-6 sm:p-8 space-y-6">
@@ -2001,8 +2077,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogoutSuccess 
                           <tr className="bg-gray-55 border-b border-gray-250 text-[10px] uppercase tracking-wider font-bold text-gray-500">
                             <th className="px-5 py-3.5 font-sans">Date Timestamp</th>
                             <th className="px-5 py-3.5 font-sans">Process Status</th>
-                            <th className="px-5 py-3.5 font-sans text-center">Items Scanned</th>
-                            <th className="px-5 py-3.5 text-center">Items Saved</th>
+                            <th className="px-5 py-3.5 font-sans text-center">Posts Imported</th>
+                            <th className="px-5 py-3.5 text-center">Reels Imported</th>
                             <th className="px-5 py-3.5 font-sans">Message dossier</th>
                           </tr>
                         </thead>
@@ -2010,7 +2086,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogoutSuccess 
                           {instagramLogs.slice(0, 15).map((log, idx) => (
                             <tr key={log.id || idx} className="hover:bg-gray-50/50">
                               <td className="px-5 py-4 font-mono text-[11px] text-gray-550">
-                                {new Date(log.syncAt).toLocaleString(undefined, {
+                                {new Date(log.createdAt).toLocaleString(undefined, {
                                   dateStyle: 'medium',
                                   timeStyle: 'short'
                                 })}
@@ -2026,8 +2102,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogoutSuccess 
                                   </span>
                                 )}
                               </td>
-                              <td className="px-5 py-4 font-mono text-center text-gray-600 font-semibold">{log.itemsProcessed}</td>
-                              <td className="px-5 py-4 font-mono text-center text-emerald-700 font-black">+{log.itemsSaved}</td>
+                              <td className="px-5 py-4 font-mono text-center text-gray-600 font-semibold">{log.postsImported}</td>
+                              <td className="px-5 py-4 font-mono text-center text-emerald-700 font-black">{log.reelsImported}</td>
                               <td className="px-5 py-4 text-xs font-sans text-gray-550 max-w-[280px] truncate leading-normal" title={log.message || ""}>
                                 {log.message || "No system anomalies detected. Sweep executed successfully."}
                               </td>

@@ -796,8 +796,6 @@ export const api = {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        // Since we are running pure clientless/headless, we'll return a premium unsplash image
-        // matching the file name or a base64 encoded URL directly (smaller files)
         if (file.size < 50000) {
           resolve(reader.result as string);
         } else {
@@ -826,13 +824,11 @@ export const api = {
       if (!error && data) {
         return mapInstagramSettings.toReact(data);
       }
-      // If table exists but row doesn't and no error, seed it
       if (!error && !data) {
         const seeded = mapInstagramSettings.toDb(DEFAULT_INSTAGRAM_SETTINGS);
         await supabase.from("instagram_settings").insert(seeded).maybeSingle();
         return DEFAULT_INSTAGRAM_SETTINGS;
       }
-      // Table may not exist — fall back to localStorage
       console.warn("Instagram settings table unavailable, using local fallback:", error?.message);
     }
     return getLocalCollection<InstagramSettings>("instagram_settings", DEFAULT_INSTAGRAM_SETTINGS);
@@ -841,7 +837,6 @@ export const api = {
   updateInstagramSettings: async (settings: Partial<InstagramSettings>): Promise<InstagramSettings> => {
     if (supabase) {
       const dbPayload = mapInstagramSettings.toDb(settings);
-      // Clean undefined
       const cleaned = Object.fromEntries(Object.entries(dbPayload).filter(([_, v]) => v !== undefined));
       const { data, error } = await supabase
         .from("instagram_settings")
@@ -867,11 +862,40 @@ export const api = {
       if (!error && data) {
         return (data || []).map(mapInstagramPost.toReact);
       }
-      // Silently fall back to localStorage — table may not exist
     }
-    // Sort posts from local collection
     const list = getLocalCollection<InstagramPost[]>("instagram_posts", DEFAULT_INSTAGRAM_POSTS);
     return list.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  },
+
+  /** NEW: Delete an individual Instagram post by ID (CRUD operation) */
+  deleteInstagramPost: async (id: string): Promise<{ success: boolean }> => {
+    if (supabase) {
+      const { error } = await supabase.from("instagram_posts").delete().eq("id", id);
+      if (error) throw error;
+      return { success: true };
+    }
+    const current = getLocalCollection<InstagramPost[]>("instagram_posts", DEFAULT_INSTAGRAM_POSTS);
+    const filtered = current.filter(p => p.id !== id);
+    setLocalCollection("instagram_posts", filtered);
+    return { success: true };
+  },
+
+  /** NEW: Update an Instagram post */
+  updateInstagramPost: async (id: string, data: Partial<InstagramPost>): Promise<InstagramPost> => {
+    if (supabase) {
+      const dbData = mapInstagramPost.toDb(data);
+      const cleaned = Object.fromEntries(Object.entries(dbData).filter(([_, v]) => v !== undefined));
+      const { data: updated, error } = await supabase.from("instagram_posts").update(cleaned).eq("id", id).select().single();
+      if (error) throw error;
+      return mapInstagramPost.toReact(updated);
+    }
+    const current = getLocalCollection<InstagramPost[]>("instagram_posts", DEFAULT_INSTAGRAM_POSTS);
+    const idx = current.findIndex(p => p.id === id);
+    if (idx === -1) throw new Error("Instagram post not found.");
+    const updated = { ...current[idx], ...data };
+    current[idx] = updated;
+    setLocalCollection("instagram_posts", current);
+    return updated;
   },
 
   getInstagramLogs: async (): Promise<InstagramSyncLog[]> => {
@@ -884,7 +908,6 @@ export const api = {
       if (!error && data) {
         return (data || []).map(mapInstagramSyncLog.toReact);
       }
-      // Silently fall back to localStorage — table may not exist
     }
     const list = getLocalCollection<InstagramSyncLog[]>("instagram_sync_logs", DEFAULT_INSTAGRAM_LOGS);
     return list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
@@ -976,20 +999,27 @@ export const api = {
         logMessage = `Meta Graph API Synchronization success. Fetched ${fetchedPosts.length} active items.`;
       } catch (err: any) {
         const failedMsg = `Sync failed. Reason: ${err.message || err}`;
-        const logObj: Omit<InstagramSyncLog, "id"> = {
-          status: "FAILED",
-          message: failedMsg,
-          postsImported: 0,
-          reelsImported: 0,
-          createdAt: new Date().toISOString()
-        };
-        
+
+        // Fix: Don't pass `id` for Supabase since it uses gen_random_uuid()
         if (supabase) {
-          const dbLog = mapInstagramSyncLog.toDb({ ...logObj, id: undefined as any });
+          const dbLog = {
+            status: "FAILED",
+            message: failedMsg,
+            posts_imported: 0,
+            reels_imported: 0,
+            created_at: new Date().toISOString()
+          };
           await supabase.from("instagram_sync_logs").insert(dbLog);
         } else {
           const lLogs = getLocalCollection<InstagramSyncLog[]>("instagram_sync_logs", DEFAULT_INSTAGRAM_LOGS);
-          lLogs.push({ ...logObj, id: "log-" + Math.random().toString(36).substring(2, 9) });
+          lLogs.push({ 
+            id: "log-" + Math.random().toString(36).substring(2, 9), 
+            status: "FAILED",
+            message: failedMsg,
+            postsImported: 0,
+            reelsImported: 0,
+            createdAt: new Date().toISOString()
+          });
           setLocalCollection("instagram_sync_logs", lLogs);
         }
         throw new Error(failedMsg);
@@ -1081,19 +1111,25 @@ export const api = {
       ? `Sandbox check verified. Skipped duplicate IDs. 1 new post imported successfully.`
       : `Sync completed. ${postsAddedCount} new posts integrated. Reels: ${reelsAddedCount}.`;
 
-    const successLogObj: InstagramSyncLog = {
-      id: "log-" + Math.random().toString(36).substring(2, 9),
-      status: "SUCCESS",
-      message: successMsg,
-      postsImported: postsAddedCount,
-      reelsImported: reelsAddedCount,
-      createdAt: new Date().toISOString()
-    };
-
     if (supabase) {
-      const dbLog = mapInstagramSyncLog.toDb(successLogObj);
+      // Fix: Don't pass `id` for Supabase since it uses gen_random_uuid()
+      const dbLog = {
+        status: "SUCCESS",
+        message: successMsg,
+        posts_imported: postsAddedCount,
+        reels_imported: reelsAddedCount,
+        created_at: new Date().toISOString()
+      };
       await supabase.from("instagram_sync_logs").insert(dbLog);
     } else {
+      const successLogObj: InstagramSyncLog = {
+        id: "log-" + Math.random().toString(36).substring(2, 9),
+        status: "SUCCESS",
+        message: successMsg,
+        postsImported: postsAddedCount,
+        reelsImported: reelsAddedCount,
+        createdAt: new Date().toISOString()
+      };
       const logsList = getLocalCollection<InstagramSyncLog[]>("instagram_sync_logs", DEFAULT_INSTAGRAM_LOGS);
       logsList.unshift(successLogObj);
       if (logsList.length > 20) logsList.length = 20;
